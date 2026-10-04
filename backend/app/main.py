@@ -25,17 +25,25 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS Configuration
+# Dynamic Host & Port Configuration (Defaults to 0.0.0.0 for reliable external and local connections)
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", "8000"))
+
+# Comprehensive CORS Configuration for local, loopback, and LAN development
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://0.0.0.0:5173",
+    "http://localhost:4173",
+    "http://127.0.0.1:4173",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits flexible development and frontend proxy
+    allow_origins=origins,
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,6 +61,8 @@ async def root():
         "app": "ContractAI API",
         "tagline": "Understand Before You Sign.",
         "status": "online",
+        "host": HOST,
+        "port": PORT,
         "documentation": "/docs"
     }
 
@@ -60,7 +70,9 @@ async def root():
 async def health_check():
     return {
         "status": "healthy",
-        "service": "ContractAI Backend"
+        "service": "ContractAI Backend",
+        "host": HOST,
+        "port": PORT
     }
 
 # Graceful global exception handling
@@ -74,4 +86,5 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host=HOST, port=PORT, reload=True)
+

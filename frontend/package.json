@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview",
-    "demo": "vite build && vite preview"
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "demo": "vite build && vite preview --host 0.0.0.0 --port 4173"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

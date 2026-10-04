@@ -4,6 +4,7 @@ import { offlineDemoService, OFFLINE_SAMPLE_TEXTS } from './demoDataService';
 
 const api = axios.create({
   baseURL: '/api',
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
