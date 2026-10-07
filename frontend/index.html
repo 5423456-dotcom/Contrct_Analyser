@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContractAI — AI-powered Contract Intelligence</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons via Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="contractai-purple-theme">
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Ambient Purple Light Oras -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- =========================================================================
+       VIEW 1: AUTHENTICATION GATEWAY (PURPLE + BLACK GLASSMORPHISM)
+       ========================================================================= -->
+  <section id="authView" class="auth-viewport">
+    <div class="auth-card-wrapper">
+      
+      <!-- Brand Header -->
+      <div class="auth-brand">
+        <div class="auth-logo-badge">
+          <iconify-icon icon="lucide:scale" width="28" height="28"></iconify-icon>
+        </div>
+        <div class="auth-brand-text">
+          <span class="brand-title">CONTRACT<span class="gradient-ai">AI</span></span>
+          <span class="brand-tagline">AI-powered Contract Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Auth Glass Card -->
+      <div class="auth-glass-box">
+        
+        <!-- Header Text -->
+        <div class="auth-box-header">
+          <h2 id="authHeading" class="auth-box-title">Welcome to ContractAI</h2>
+          <p id="authSubheading" class="auth-box-desc">Sign in to access your contracts and intelligence reports</p>
+        </div>
+
+        <!-- Mode Switcher Tabs -->
+        <div class="auth-tab-pill-group">
+          <button type="button" id="tabSignIn" class="auth-pill-tab active">
+            <iconify-icon icon="lucide:log-in" width="15" height="15"></iconify-icon>
+            <span>Sign In</span>
+          </button>
+          <button type="button" id="tabRegister" class="auth-pill-tab">
+            <iconify-icon icon="lucide:user-plus" width="15" height="15"></iconify-icon>
+            <span>Create Account</span>
+          </button>
+        </div>
+
+        <!-- Lockout Alert Banner -->
+        <div id="lockoutBanner" class="lockout-banner hidden">
+          <iconify-icon icon="lucide:alert-triangle" width="18" height="18" class="banner-icon"></iconify-icon>
+          <div class="banner-body">
+            <strong id="lockoutBannerTitle">Account Security Alert</strong>
+            <p id="lockoutBannerDesc">Failed login attempts tracked. 3 consecutive failures lock the account.</p>
+          </div>
+        </div>
+
+        <!-- Auth Form -->
+        <form id="authForm" class="auth-form-inputs">
+          
+          <div class="form-field">
+            <label for="authUsername" class="field-label">Username</label>
+            <div class="input-wrap">
+              <iconify-icon icon="lucide:user" width="16" height="16" class="input-icon"></iconify-icon>
+              <input 
+                type="text" 
+                id="authUsername" 
+                class="glass-input" 
+                placeholder="Enter username" 
+                required 
+                autocomplete="username"
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <div class="field-label-row">
+              <label for="authPassword" class="field-label">Password</label>
+              <span class="field-subtext">Custom ASCII Hashing</span>
+            </div>
+            <div class="input-wrap">
+              <iconify-icon icon="lucide:key" width="16" height="16" class="input-icon"></iconify-icon>
+              <input 
+                type="password" 
+                id="authPassword" 
+                class="glass-input" 
+                placeholder="••••••••••••" 
+                required 
+                autocomplete="current-password"
+              />
+              <button type="button" id="togglePasswordBtn" class="input-eye-btn" title="Toggle password visibility">
+                <iconify-icon id="pwdEyeIcon" icon="lucide:eye" width="16" height="16"></iconify-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time ASCII Sum Preview -->
+          <div class="ascii-hash-preview">
+            <div class="hash-row">
+              <span class="hash-label">&sum; ASCII-Sum Hash:</span>
+              <span id="asciiSumValue" class="hash-val">0</span>
+            </div>
+            <span class="hash-hint">Calculated in real-time &rarr; stored in SQLite</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="authSubmitBtn" class="btn-purple-primary">
+            <span id="authSubmitText">Sign In to ContractAI</span>
+            <iconify-icon icon="lucide:arrow-right" width="16" height="16"></iconify-icon>
+          </button>
+
+          <!-- 1-Click Demo Credentials -->
+          <div class="demo-autofill-box">
+            <span class="demo-box-label">Quick Testing Profiles:</span>
+            <div class="demo-pills">
+              <button type="button" id="btnQuickDemo1" class="demo-chip">
+                <iconify-icon icon="lucide:zap" width="12" height="12"></iconify-icon>
+                <span>Abhinandan / DemoPass2026</span>
+              </button>
+              <button type="button" id="btnQuickDemo2" class="demo-chip">
+                <iconify-icon icon="lucide:shield" width="12" height="12"></iconify-icon>
+                <span>LegalCounsel / SafePass123</span>
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="auth-footnote">
+          <iconify-icon icon="lucide:lock" width="13" height="13"></iconify-icon>
+          <span>Secured with SQLite persistence & 3-attempt brute force defense</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- =========================================================================
+       VIEW 2: ORIGINAL PURPLE + BLACK CONTRACTAI DASHBOARD (PROTECTED)
+       WITH NEW FLOATING NAVIGATION TABS V2
+       ========================================================================= -->
+  <section id="dashboardView" class="dashboard-viewport hidden">
+    
+    <!-- =====================================================================
+         NEW NAVIGATION TABS V2 (FLOATING PILL-SHAPED NAVIGATION)
+         ===================================================================== -->
+    <header class="floating-nav-header">
+      <div class="floating-nav-container">
+        
+        <!-- Left Brand Identity -->
+        <div class="nav-brand-left">
+          <div class="brand-icon-gem">
+            <iconify-icon icon="lucide:scale" width="20" height="20"></iconify-icon>
+          </div>
+          <div class="brand-text-block">
+            <span class="brand-logo-text">CONTRACT<span class="gradient-ai">AI</span></span>
+            <span class="brand-micro-tag">Contract Intelligence</span>
+          </div>
+        </div>
+
+        <!-- NEW FLOATING NAVIGATION TABS V2 -->
+        <nav class="nav-tabs-v2" role="tablist" aria-label="Main Navigation">
+          
+          <button type="button" class="nav-tab-v2-item active" data-tab="home" role="tab" aria-selected="true">
+            <span class="tab-emoji-icon">🏠</span>
+            <span class="tab-title">Home</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+          <button type="button" class="nav-tab-v2-item" data-tab="analyze" role="tab" aria-selected="false">
+            <span class="tab-emoji-icon">📄</span>
+            <span class="tab-title">Analyze</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+          <button type="button" class="nav-tab-v2-item" data-tab="contracts" role="tab" aria-selected="false">
+            <span class="tab-emoji-icon">📁</span>
+            <span class="tab-title">Contracts</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+          <button type="button" class="nav-tab-v2-item" data-tab="insights" role="tab" aria-selected="false">
+            <span class="tab-emoji-icon">🧠</span>
+            <span class="tab-title">AI Insights</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+          <button type="button" class="nav-tab-v2-item" data-tab="alerts" role="tab" aria-selected="false">
+            <span class="tab-emoji-icon">🔔</span>
+            <span class="tab-title">Alerts</span>
+            <span class="alerts-counter-pill">3</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+          <button type="button" class="nav-tab-v2-item" data-tab="profile" role="tab" aria-selected="false">
+            <span class="tab-emoji-icon">👤</span>
+            <span class="tab-title">Profile</span>
+            <span class="active-indicator-glow"></span>
+          </button>
+
+        </nav>
+
+        <!-- Right System Status & Quick Sign Out -->
+        <div class="nav-actions-right">
+          <div class="system-status-pill" title="FastAPI Backend Online">
+            <span class="status-pulse-dot"></span>
+            <span class="status-label">Active</span>
+          </div>
+
+          <div class="user-pill-dropdown">
+            <div class="user-avatar-circle" id="navUserAvatar">A</div>
+            <span class="user-name-snippet" id="navUserName">Abhinandan</span>
+            <button type="button" id="btnSignOutTop" class="btn-icon-logout" title="Sign Out">
+              <iconify-icon icon="lucide:log-out" width="15" height="15"></iconify-icon>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+
+    <!-- =====================================================================
+         MAIN DASHBOARD WORKSPACE (TABBED CONTENT)
+         ===================================================================== -->
+    <main class="dashboard-main-content">
+      <div class="content-wrapper">
+
+        <!-- ===================================================================
+             TAB 1: HOME (ORIGINAL PURPLE + BLACK DASHBOARD)
+             =================================================================== -->
+        <div id="tabContentHome" class="dashboard-page-view active">
+          
+          <!-- Original Hero Section -->
+          <section class="original-hero-card">
+            <div class="hero-left-col">
+              <div class="hero-badge">
+                <iconify-icon icon="lucide:sparkles" width="14" height="14"></iconify-icon>
+                <span>AI-powered Contract Intelligence</span>
+              </div>
+              <h1 class="hero-heading">
+                Understand Your Agreements <br />
+                <span class="gradient-ai">Before You Commit.</span>
+              </h1>
+              <p class="hero-paragraph">
+                Deep multi-layer parsing detects obligations, hidden liabilities, lock-in periods, notice requirements, and financial penalties in seconds.
+              </p>
+              <div class="hero-btn-row">
+                <button type="button" id="ctaAnalyzeHero" class="btn-purple-primary">
+                  <iconify-icon icon="lucide:sparkles" width="16" height="16"></iconify-icon>
+                  <span>+ Analyze New Contract</span>
+                </button>
+                <button type="button" id="ctaViewRepoHero" class="btn-glass-secondary">
+                  <iconify-icon icon="lucide:folder" width="16" height="16"></iconify-icon>
+                  <span>Browse Contracts</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Hero Right Intelligence Graphic -->
+            <div class="hero-right-col">
+              <div class="glass-intelligence-display">
+                <div class="display-top">
+                  <div class="badge-mini-glow">
+                    <span class="pulse-dot"></span> Live Clause Scanner
+                  </div>
+                  <span class="speed-tag">&lt; 1.2s Analysis</span>
+                </div>
+                <div class="display-feature-list">
+                  <div class="feature-item">
+                    <iconify-icon icon="lucide:shield-check" width="16" height="16" class="text-violet"></iconify-icon>
+                    <span>21-Taxonomy Clause Extraction</span>
+                  </div>
+                  <div class="feature-item">
+                    <iconify-icon icon="lucide:alert-triangle" width="16" height="16" class="text-amber"></iconify-icon>
+                    <span>Financial Penalty & Lock-in Detection</span>
+                  </div>
+                  <div class="feature-item">
+                    <iconify-icon icon="lucide:scale" width="16" height="16" class="text-cyan"></iconify-icon>
+                    <span>Student & Commercial Rights Mapping</span>
+                  </div>
+                </div>
+                <div class="display-stat-highlight">
+                  <span class="stat-big">94%</span>
+                  <span class="stat-big-desc">Risk Detection Accuracy across uploaded agreements</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 Core Statistics Cards -->
+          <section class="stats-row">
+            
+            <div class="glass-stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Total Contracts</span>
+                <div class="stat-icon-violet">
+                  <iconify-icon icon="lucide:files" width="18" height="18"></iconify-icon>
+                </div>
+              </div>
+              <div class="stat-val-row">
+                <span class="stat-number" id="statTotalContracts">18</span>
+                <span class="stat-trend trend-purple">+3 this month</span>
+              </div>
+              <span class="stat-desc">Indexed in secure SQLite repository</span>
+            </div>
+
+            <div class="glass-stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Analyzed by AI</span>
+                <div class="stat-icon-violet">
+                  <iconify-icon icon="lucide:cpu" width="18" height="18"></iconify-icon>
+                </div>
+              </div>
+              <div class="stat-val-row">
+                <span class="stat-number" id="statAnalyzedContracts">16</span>
+                <span class="stat-trend trend-purple">94% coverage</span>
+              </div>
+              <span class="stat-desc">Full clause-by-clause breakdown</span>
+            </div>
+
+            <div class="glass-stat-card">
+              <div class="stat-top">
+                <span class="stat-label">High / Critical Risks</span>
+                <div class="stat-icon-violet">
+                  <iconify-icon icon="lucide:alert-octagon" width="18" height="18"></iconify-icon>
+                </div>
+              </div>
+              <div class="stat-val-row">
+                <span class="stat-number text-orange" id="statHighRisk">3</span>
+                <span class="stat-trend trend-alert">Needs Review</span>
+              </div>
+              <span class="stat-desc">Non-competes & deposit forfeitures</span>
+            </div>
+
+            <div class="glass-stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Upcoming Deadlines</span>
+                <div class="stat-icon-violet">
+                  <iconify-icon icon="lucide:calendar-clock" width="18" height="18"></iconify-icon>
+                </div>
+              </div>
+              <div class="stat-val-row">
+                <span class="stat-number" id="statUpcomingDeadlines">5</span>
+                <span class="stat-trend trend-neutral">Next 30 days</span>
+              </div>
+              <span class="stat-desc">Notice windows & renewals</span>
+            </div>
+
+          </section>
+
+          <!-- Risk Distribution & Clause Alerts Section -->
+          <section class="dashboard-two-col">
+            
+            <!-- Risk Portfolio Breakdown Bar -->
+            <div class="glass-panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Portfolio Risk Distribution</h3>
+                  <p class="panel-desc">Severity distribution across stored contracts</p>
+                </div>
+                <span class="pill-neutral">18 Active Files</span>
+              </div>
+
+              <!-- Segmented Risk Bar -->
+              <div class="segmented-risk-bar">
+                <div class="risk-segment segment-low" style="width: 62%;" title="Low Risk: 62%"></div>
+                <div class="risk-segment segment-medium" style="width: 24%;" title="Medium Risk: 24%"></div>
+                <div class="risk-segment segment-high" style="width: 11%;" title="High Risk: 11%"></div>
+                <div class="risk-segment segment-critical" style="width: 3%;" title="Critical Risk: 3%"></div>
+              </div>
+
+              <div class="risk-legend">
+                <div class="legend-chip"><span class="dot dot-low"></span> Low (62%)</div>
+                <div class="legend-chip"><span class="dot dot-medium"></span> Medium (24%)</div>
+                <div class="legend-chip"><span class="dot dot-high"></span> High (11%)</div>
+                <div class="legend-chip"><span class="dot dot-critical"></span> Critical (3%)</div>
+              </div>
+
+              <div class="health-notice">
+                <iconify-icon icon="lucide:check-circle" width="16" height="16" class="text-green"></iconify-icon>
+                <span><strong>Healthy Portfolio Baseline:</strong> 86% of stored contracts have standard bilateral protections.</span>
+              </div>
+            </div>
+
+            <!-- Priority Insights -->
+            <div class="glass-panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">AI Priority Clause Alerts</h3>
+                  <p class="panel-desc">Critical attention flags requiring user awareness</p>
+                </div>
+                <button type="button" class="btn-ghost-icon" title="Refresh Insights">
+                  <iconify-icon icon="lucide:refresh-cw" width="14" height="14"></iconify-icon>
+                </button>
+              </div>
+
+              <div class="insights-stack">
+                <div class="insight-row alert-red">
+                  <iconify-icon icon="lucide:alert-circle" width="18" height="18"></iconify-icon>
+                  <div class="insight-content">
+                    <span class="insight-title">12-Month Non-Compete Detected</span>
+                    <p class="insight-text">In <em>Lead Systems Architect Contract</em>. Restricts cloud analytics services globally.</p>
+                  </div>
+                  <span class="risk-tag tag-critical">Critical</span>
+                </div>
+
+                <div class="insight-row alert-orange">
+                  <iconify-icon icon="lucide:clock-alert" width="18" height="18"></iconify-icon>
+                  <div class="insight-content">
+                    <span class="insight-title">30-Day Notice & Deposit Forfeiture</span>
+                    <p class="insight-text">In <em>Internship & IP Agreement</em>. Resignation during 3-month lock-in triggers liquidated damages.</p>
+                  </div>
+                  <span class="risk-tag tag-high">High</span>
+                </div>
+
+                <div class="insight-row alert-purple">
+                  <iconify-icon icon="lucide:shield" width="18" height="18"></iconify-icon>
+                  <div class="insight-content">
+                    <span class="insight-title">3-Year Mutual Confidentiality</span>
+                    <p class="insight-text">In <em>Mutual NDA Vertex Cloud</em>. Standard 14-day data return/destruction requirements.</p>
+                  </div>
+                  <span class="risk-tag tag-standard">Standard</span>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- Recent Contracts Portfolio Section -->
+          <section class="glass-panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Recent Contracts Overview</h3>
+                <p class="panel-desc">Review risk levels and inspect full AI clause reports</p>
+              </div>
+              <div class="header-action-group">
+                <div class="search-input-box">
+                  <iconify-icon icon="lucide:search" width="14" height="14"></iconify-icon>
+                  <input type="text" id="homeContractSearch" placeholder="Search contracts..." />
+                </div>
+                <button type="button" id="btnHomeGoAnalyze" class="btn-purple-sm">
+                  <iconify-icon icon="lucide:plus" width="14" height="14"></iconify-icon>
+                  <span>Upload Contract</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Contract Name</th>
+                    <th>Category</th>
+                    <th>Risk Assessment</th>
+                    <th>Status</th>
+                    <th>Last Analyzed</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="homeContractsTableBody">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+
+        <!-- ===================================================================
+             TAB 2: ANALYZE CONTRACT (HERO FEATURE + COMPLETE REPORT)
+             =================================================================== -->
+        <div id="tabContentAnalyze" class="dashboard-page-view hidden">
+          
+          <div class="analyze-workspace">
+            
+            <div class="workspace-header">
+              <div class="workspace-badge">
+                <iconify-icon icon="lucide:sparkles" width="14" height="14"></iconify-icon>
+                <span>Automated AI Legal Analysis Engine</span>
+              </div>
+              <h2 class="workspace-title">Upload or Select an Agreement to Analyze</h2>
+              <p class="workspace-desc">
+                ContractAI automatically identifies student and commercial obligations, notice requirements, lock-in periods, and assigns weighted risk ratings.
+              </p>
+            </div>
+
+            <!-- Quick Sample Agreements Picker -->
+            <div class="sample-picker-box">
+              <span class="picker-title">
+                <iconify-icon icon="lucide:file-stack" width="16" height="16"></iconify-icon>
+                <span>Quick-Load Verified Enterprise Demo Agreements:</span>
+              </span>
+              <div class="sample-grid">
+                
+                <button type="button" class="sample-btn" data-sample="internship">
+                  <div class="sample-icon icon-purple">
+                    <iconify-icon icon="lucide:briefcase" width="18" height="18"></iconify-icon>
+                  </div>
+                  <div class="sample-meta">
+                    <strong class="sample-heading">Internship & IP Agreement</strong>
+                    <span class="sample-sub">Software Dev • 6 Months • Lock-in & Penalties</span>
+                  </div>
+                  <iconify-icon icon="lucide:chevron-right" width="16" height="16" class="arrow"></iconify-icon>
+                </button>
+
+                <button type="button" class="sample-btn" data-sample="hostel">
+                  <div class="sample-icon icon-amber">
+                    <iconify-icon icon="lucide:home" width="18" height="18"></iconify-icon>
+                  </div>
+                  <div class="sample-meta">
+                    <strong class="sample-heading">Student Hostel Tenancy</strong>
+                    <span class="sample-sub">Residential Lease • Deposit & 45-day Notice</span>
+                  </div>
+                  <iconify-icon icon="lucide:chevron-right" width="16" height="16" class="arrow"></iconify-icon>
+                </button>
+
+                <button type="button" class="sample-btn" data-sample="nda">
+                  <div class="sample-icon icon-cyan">
+                    <iconify-icon icon="lucide:shield" width="18" height="18"></iconify-icon>
+                  </div>
+                  <div class="sample-meta">
+                    <strong class="sample-heading">Mutual Non-Disclosure (NDA)</strong>
+                    <span class="sample-sub">Commercial Tech • 3-Year Confidentiality</span>
+                  </div>
+                  <iconify-icon icon="lucide:chevron-right" width="16" height="16" class="arrow"></iconify-icon>
+                </button>
+
+                <button type="button" class="sample-btn" data-sample="employment">
+                  <div class="sample-icon icon-orange">
+                    <iconify-icon icon="lucide:file-signature" width="18" height="18"></iconify-icon>
+                  </div>
+                  <div class="sample-meta">
+                    <strong class="sample-heading">Lead Systems Architect Contract</strong>
+                    <span class="sample-sub">Full-time • IP Assignment & Non-Compete</span>
+                  </div>
+                  <iconify-icon icon="lucide:chevron-right" width="16" height="16" class="arrow"></iconify-icon>
+                </button>
+
+              </div>
+            </div>
+
+            <!-- Upload Methods (File vs Text) -->
+            <div class="glass-panel-card">
+              <div class="method-tab-bar">
+                <button type="button" id="tabUploadFile" class="method-tab active">
+                  <iconify-icon icon="lucide:file-up" width="16" height="16"></iconify-icon>
+                  <span>Upload Document File (PDF / DOCX / TXT)</span>
+                </button>
+                <button type="button" id="tabUploadText" class="method-tab">
+                  <iconify-icon icon="lucide:file-edit" width="16" height="16"></iconify-icon>
+                  <span>Paste Agreement Text</span>
+                </button>
+              </div>
+
+              <!-- File Dropzone -->
+              <div id="panelUploadFile" class="method-content active">
+                <div class="dropzone" id="contractDropzone">
+                  <input type="file" id="fileUploadInput" class="dropzone-input" accept=".pdf,.docx,.txt" />
+                  <div class="dropzone-prompt">
+                    <div class="dropzone-gem-icon">
+                      <iconify-icon icon="lucide:cloud-upload" width="34" height="34"></iconify-icon>
+                    </div>
+                    <strong class="dropzone-text">Drag & drop your contract file here</strong>
+                    <span class="dropzone-sub">Supports PDF, DOCX, and TXT files up to 25MB</span>
+                    <button type="button" id="btnBrowseFile" class="btn-glass-sm">
+                      <iconify-icon icon="lucide:folder-open" width="14" height="14"></iconify-icon>
+                      <span>Browse Local Files</span>
+                    </button>
+                  </div>
+
+                  <div id="selectedFileInfo" class="file-chosen-banner hidden">
+                    <iconify-icon icon="lucide:file-check" width="22" height="22" class="text-violet"></iconify-icon>
+                    <div class="file-chosen-meta">
+                      <span id="selectedFileName" class="file-chosen-name">Agreement.pdf</span>
+                      <span id="selectedFileSize" class="file-chosen-size">142 KB</span>
+                    </div>
+                    <button type="button" id="btnRemoveFile" class="btn-remove-chosen" title="Remove file">
+                      <iconify-icon icon="lucide:x" width="16" height="16"></iconify-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="upload-btn-row">
+                  <button type="button" id="btnSubmitFileUpload" class="btn-purple-primary" disabled>
+                    <iconify-icon icon="lucide:sparkles" width="16" height="16"></iconify-icon>
+                    <span>Run AI Contract Analysis</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Paste Text Input -->
+              <div id="panelUploadText" class="method-content hidden">
+                <div class="paste-form">
+                  <div class="form-dual-row">
+                    <div class="form-field flex-1">
+                      <label for="textContractTitle" class="field-label">Contract Title / Reference</label>
+                      <input type="text" id="textContractTitle" class="glass-input" placeholder="e.g. Master Services Agreement" />
+                    </div>
+                    <div class="form-field flex-1">
+                      <label for="textContractCategory" class="field-label">Category</label>
+                      <select id="textContractCategory" class="glass-select">
+                        <option value="Employment">Employment & IP</option>
+                        <option value="Tenancy">Tenancy & Residential Lease</option>
+                        <option value="Commercial NDA">Commercial NDA</option>
+                        <option value="Vendor / SLA">Vendor & Service Level Agreement</option>
+                        <option value="General Commercial">General Commercial</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <div class="field-label-row">
+                      <label for="rawContractText" class="field-label">Agreement Text Content</label>
+                      <span class="field-subtext" id="charCountDisplay">0 characters</span>
+                    </div>
+                    <textarea id="rawContractText" class="glass-textarea" rows="9" placeholder="Paste your contract clauses or full agreement text here..."></textarea>
+                  </div>
+
+                  <div class="upload-btn-row">
+                    <button type="button" id="btnSubmitTextUpload" class="btn-purple-primary">
+                      <iconify-icon icon="lucide:sparkles" width="16" height="16"></iconify-icon>
+                      <span>Analyze Pasted Text</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- AI 5-Stage Stepper Overlay -->
+            <div id="analysisStepperOverlay" class="stepper-overlay-box hidden">
+              <div class="stepper-header-row">
+                <div class="badge-mini-glow">
+                  <iconify-icon icon="lucide:sparkles" width="15" height="15"></iconify-icon>
+                  <span>AI Engine In Progress</span>
+                </div>
+                <h3 class="stepper-title">Intelligently Analyzing Contract...</h3>
+                <p class="stepper-desc">Parsing paragraphs, extracting clauses, weighing financial liabilities & evaluating risk.</p>
+              </div>
+
+              <div class="stepper-grid">
+                <div class="stepper-step-card" id="stageStep1">
+                  <div class="step-num-circle">1</div>
+                  <div class="step-info">
+                    <strong>Document Ingestion</strong>
+                    <span>Extracting text & formatting</span>
+                  </div>
+                </div>
+                <div class="stepper-step-card" id="stageStep2">
+                  <div class="step-num-circle">2</div>
+                  <div class="step-info">
+                    <strong>Clause Taxonomy</strong>
+                    <span>Scanning 21 legal categories</span>
+                  </div>
+                </div>
+                <div class="stepper-step-card" id="stageStep3">
+                  <div class="step-num-circle">3</div>
+                  <div class="step-info">
+                    <strong>Risk & Penalty Scoring</strong>
+                    <span>Weighing liabilities & lock-ins</span>
+                  </div>
+                </div>
+                <div class="stepper-step-card" id="stageStep4">
+                  <div class="step-num-circle">4</div>
+                  <div class="step-info">
+                    <strong>Rights & Obligations</strong>
+                    <span>Structuring duties & prohibitions</span>
+                  </div>
+                </div>
+                <div class="stepper-step-card" id="stageStep5">
+                  <div class="step-num-circle">5</div>
+                  <div class="step-info">
+                    <strong>Recommendations</strong>
+                    <span>Generating strategic takeaways</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analysis Report Container (Rendered dynamically) -->
+            <div id="analysisReportWrapper" class="analysis-report-wrapper hidden">
+              
+              <!-- Report Toolbar -->
+              <div class="report-toolbar">
+                <div class="toolbar-left">
+                  <h3 id="resContractTitle" class="report-contract-title">Software Developer Internship Agreement</h3>
+                  <div class="report-tags-row">
+                    <span id="resContractCategory" class="tag-pill">Employment & IP</span>
+                    <span id="resContractPages" class="tag-pill">2 Pages</span>
+                    <span id="resContractDuration" class="tag-pill">Term: 6 Months</span>
+                    <span id="resContractTimestamp" class="tag-pill">Analyzed Just Now</span>
+                  </div>
+                </div>
+                <div class="toolbar-right">
+                  <button type="button" id="btnExportSummary" class="btn-glass-sm">
+                    <iconify-icon icon="lucide:copy" width="14" height="14"></iconify-icon>
+                    <span>Copy Summary</span>
+                  </button>
+                  <button type="button" id="btnResetAnalyzer" class="btn-purple-sm">
+                    <iconify-icon icon="lucide:refresh-cw" width="14" height="14"></iconify-icon>
+                    <span>Analyze Another</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Risk Score Dial & Executive Summary Card -->
+              <div class="executive-summary-card">
+                <div class="gauge-column">
+                  <div class="gauge-circle">
+                    <span id="resRiskScoreNumber" class="gauge-val">72</span>
+                    <span class="gauge-denom">/ 100</span>
+                  </div>
+                  <span id="resRiskVerdictBadge" class="verdict-chip tag-high">High Risk</span>
+                  <span class="gauge-subtitle">Weighted Risk Score</span>
+                </div>
+
+                <div class="summary-column">
+                  <div class="summary-badge">
+                    <iconify-icon icon="lucide:sparkles" width="14" height="14"></iconify-icon>
+                    <span>Executive Legal Synthesis</span>
+                  </div>
+                  <p id="resExecutiveSummary" class="summary-body">
+                    This is an internship agreement with a duration of 6 months. Key elements include a defined monthly stipend, a mandatory 3-month lock-in period, full IP assignment to the host company, and strict 30-day notice provisions with financial liquidated damages.
+                  </p>
+                  <div class="takeaways-box">
+                    <strong class="takeaways-label">Key Identified Highlights:</strong>
+                    <div id="resKeyTakeawaysList" class="takeaways-chips"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Collapsible Sections -->
+              <div class="accordions-stack">
+                
+                <!-- Section 1: Clauses -->
+                <div class="glass-accordion open" id="secClauses">
+                  <button type="button" class="accordion-head">
+                    <div class="head-left">
+                      <iconify-icon icon="lucide:shield-alert" width="18" height="18" class="text-violet"></iconify-icon>
+                      <div>
+                        <strong>Clause-by-Clause Risk Analysis</strong>
+                        <span class="head-sub">Verbatim contract excerpts categorized with severity badges</span>
+                      </div>
+                    </div>
+                    <div class="head-right">
+                      <span id="resFindingsCount" class="pill-neutral">6 Clauses</span>
+                      <iconify-icon icon="lucide:chevron-down" width="18" height="18" class="chevron"></iconify-icon>
+                    </div>
+                  </button>
+                  <div class="accordion-body">
+                    <div id="resClausesList" class="clauses-grid"></div>
+                  </div>
+                </div>
+
+                <!-- Section 2: Rights & Obligations -->
+                <div class="glass-accordion open" id="secObligations">
+                  <button type="button" class="accordion-head">
+                    <div class="head-left">
+                      <iconify-icon icon="lucide:check-square" width="18" height="18" class="text-violet"></iconify-icon>
+                      <div>
+                        <strong>Rights, Obligations & Prohibitions Matrix</strong>
+                        <span class="head-sub">Structured breakdown of duties, restrictions and financial dues</span>
+                      </div>
+                    </div>
+                    <div class="head-right">
+                      <iconify-icon icon="lucide:chevron-down" width="18" height="18" class="chevron"></iconify-icon>
+                    </div>
+                  </button>
+                  <div class="accordion-body">
+                    <div class="obligations-columns-3">
+                      <div class="ob-col col-must">
+                        <div class="ob-head">
+                          <iconify-icon icon="lucide:check-circle-2" width="16" height="16"></iconify-icon>
+                          <span>What You Must Do</span>
+                        </div>
+                        <ul id="resObsMustDo" class="ob-list"></ul>
+                      </div>
+                      <div class="ob-col col-cannot">
+                        <div class="ob-head">
+                          <iconify-icon icon="lucide:slash" width="16" height="16"></iconify-icon>
+                          <span>What You Cannot Do</span>
+                        </div>
+                        <ul id="resObsCannotDo" class="ob-list"></ul>
+                      </div>
+                      <div class="ob-col col-pay">
+                        <div class="ob-head">
+                          <iconify-icon icon="lucide:wallet" width="16" height="16"></iconify-icon>
+                          <span>Financial Liabilities & Penalties</span>
+                        </div>
+                        <ul id="resObsFinancial" class="ob-list"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 3: Notice & Early Exit -->
+                <div class="glass-accordion" id="secNotice">
+                  <button type="button" class="accordion-head">
+                    <div class="head-left">
+                      <iconify-icon icon="lucide:clock" width="18" height="18" class="text-violet"></iconify-icon>
+                      <div>
+                        <strong>Notice Periods, Lock-ins & Early Departure</strong>
+                        <span class="head-sub">Advance written notification timelines and departure liabilities</span>
+                      </div>
+                    </div>
+                    <div class="head-right">
+                      <iconify-icon icon="lucide:chevron-down" width="18" height="18" class="chevron"></iconify-icon>
+                    </div>
+                  </button>
+                  <div class="accordion-body hidden">
+                    <div class="notice-exit-row">
+                      <div class="notice-card">
+                        <strong>When You Need to Give Notice:</strong>
+                        <ul id="resNoticeList" class="notice-list"></ul>
+                      </div>
+                      <div class="notice-card">
+                        <strong>What Happens If You Leave Early:</strong>
+                        <ul id="resEarlyExitList" class="notice-list"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 4: AI Recommendations -->
+                <div class="glass-accordion open" id="secRecs">
+                  <button type="button" class="accordion-head">
+                    <div class="head-left">
+                      <iconify-icon icon="lucide:lightbulb" width="18" height="18" class="text-violet"></iconify-icon>
+                      <div>
+                        <strong>AI Strategic Recommendations & Negotiation Points</strong>
+                        <span class="head-sub">Suggested counter-clauses and proactive safeguards</span>
+                      </div>
+                    </div>
+                    <div class="head-right">
+                      <iconify-icon icon="lucide:chevron-down" width="18" height="18" class="chevron"></iconify-icon>
+                    </div>
+                  </button>
+                  <div class="accordion-body">
+                    <div id="resRecommendationsList" class="recommendations-stack"></div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================================
+             TAB 3: CONTRACTS REPOSITORY
+             =================================================================== -->
+        <div id="tabContentContracts" class="dashboard-page-view hidden">
+          <section class="glass-panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Contracts Repository</h3>
+                <p class="panel-desc">All stored agreements and historical analyses</p>
+              </div>
+              <div class="header-action-group">
+                <button type="button" id="btnContractsGoAnalyze" class="btn-purple-sm">
+                  <iconify-icon icon="lucide:plus" width="14" height="14"></iconify-icon>
+                  <span>Analyze New Agreement</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Contract Name</th>
+                    <th>Category</th>
+                    <th>Risk Assessment</th>
+                    <th>Pages</th>
+                    <th>Uploaded Date</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="contractsRepoTableBody">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+
+        <!-- ===================================================================
+             TAB 4: AI INSIGHTS
+             =================================================================== -->
+        <div id="tabContentInsights" class="dashboard-page-view hidden">
+          <div class="insights-view-layout">
+            <div class="insights-hero-banner">
+              <div class="badge-mini-glow">
+                <iconify-icon icon="lucide:brain" width="15" height="15"></iconify-icon>
+                <span>Automated Portfolio Intelligence</span>
+              </div>
+              <h2 class="insights-hero-title">Cross-Contract Legal Intelligence</h2>
+              <p class="insights-hero-desc">Aggregated clause trends, liability warnings, and legal protection metrics.</p>
+            </div>
+
+            <div class="insights-cards-grid">
+              
+              <div class="insight-detail-card">
+                <div class="insight-card-top">
+                  <div class="insight-icon-gem text-amber">
+                    <iconify-icon icon="lucide:lock" width="20" height="20"></iconify-icon>
+                  </div>
+                  <span class="risk-tag tag-high">Attention</span>
+                </div>
+                <h3 class="insight-card-title">Mandatory Lock-in Terms</h3>
+                <p class="insight-card-body">
+                  Found in 2 out of 4 active agreements (Software Internship: 3-month lock-in; Student Hostel: 4-month lock-in). Leaving prior to completion causes deposit forfeiture and potential liquidated damages.
+                </p>
+                <div class="insight-card-footer">
+                  <iconify-icon icon="lucide:info" width="14" height="14"></iconify-icon>
+                  <span>Negotiate removal or reduce lock-in durations before appending signature.</span>
+                </div>
+              </div>
+
+              <div class="insight-detail-card">
+                <div class="insight-card-top">
+                  <div class="insight-icon-gem text-orange">
+                    <iconify-icon icon="lucide:slash" width="20" height="20"></iconify-icon>
+                  </div>
+                  <span class="risk-tag tag-critical">Critical</span>
+                </div>
+                <h3 class="insight-card-title">Broad Post-Contract Non-Competes</h3>
+                <p class="insight-card-body">
+                  Detected in <em>Lead Systems Architect Contract</em> and <em>Software Internship Agreement</em>. Contains 6 to 12-month post-term restrictions on consulting for competitors.
+                </p>
+                <div class="insight-card-footer">
+                  <iconify-icon icon="lucide:alert-triangle" width="14" height="14"></iconify-icon>
+                  <span>Request limitation to direct local competitors rather than entire industry sectors.</span>
+                </div>
+              </div>
+
+              <div class="insight-detail-card">
+                <div class="insight-card-top">
+                  <div class="insight-icon-gem text-cyan">
+                    <iconify-icon icon="lucide:file-code" width="20" height="20"></iconify-icon>
+                  </div>
+                  <span class="risk-tag tag-standard">Standard</span>
+                </div>
+                <h3 class="insight-card-title">IP Assignment & Moral Rights Waivers</h3>
+                <p class="insight-card-body">
+                  Both software agreements assign 100% of created code, algorithms, and technical artifacts to the host employer. Personal side projects outside hours should be explicitly exempted.
+                </p>
+                <div class="insight-card-footer">
+                  <iconify-icon icon="lucide:check-circle" width="14" height="14"></iconify-icon>
+                  <span>Add Exhibit A listing pre-existing personal intellectual property.</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ===================================================================
+             TAB 5: ALERTS
+             =================================================================== -->
+        <div id="tabContentAlerts" class="dashboard-page-view hidden">
+          <section class="glass-panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Active Notifications & Security Alerts</h3>
+                <p class="panel-desc">Real-time alerts regarding contract deadlines, lockouts, and compliance</p>
+              </div>
+              <span class="pill-neutral">3 Unread</span>
+            </div>
+
+            <div class="alerts-feed-stack">
+              
+              <div class="alert-feed-card alert-critical-edge">
+                <div class="feed-icon text-red">
+                  <iconify-icon icon="lucide:alert-octagon" width="20" height="20"></iconify-icon>
+                </div>
+                <div class="feed-body">
+                  <div class="feed-title-row">
+                    <strong>Critical Non-Compete Restriction Detected</strong>
+                    <span class="feed-time">10 mins ago</span>
+                  </div>
+                  <p class="feed-desc">
+                    ContractAI detected a 12-month post-employment non-compete clause in the uploaded <em>Lead Systems Architect Contract</em>. Immediate legal review recommended.
+                  </p>
+                </div>
+                <button type="button" class="btn-glass-sm btn-inspect-alert-demo">View Clause</button>
+              </div>
+
+              <div class="alert-feed-card alert-orange-edge">
+                <div class="feed-icon text-orange">
+                  <iconify-icon icon="lucide:clock-alert" width="20" height="20"></iconify-icon>
+                </div>
+                <div class="feed-body">
+                  <div class="feed-title-row">
+                    <strong>45-Day Advance Notice Requirement Approaching</strong>
+                    <span class="feed-time">2 hours ago</span>
+                  </div>
+                  <p class="feed-desc">
+                    <em>Student Hostel Tenancy Agreement</em> requires 45 days written portal notice before departure to avoid security deposit forfeiture (INR 29,000).
+                  </p>
+                </div>
+                <button type="button" class="btn-glass-sm btn-inspect-alert-demo">View Notice</button>
+              </div>
+
+              <div class="alert-feed-card alert-purple-edge">
+                <div class="feed-icon text-violet">
+                  <iconify-icon icon="lucide:shield-check" width="20" height="20"></iconify-icon>
+                </div>
+                <div class="feed-body">
+                  <div class="feed-title-row">
+                    <strong>Audit Logging & Lockout Defense Active</strong>
+                    <span class="feed-time">1 day ago</span>
+                  </div>
+                  <p class="feed-desc">
+                    SQLite persistence and Google Sheets audit sync initialized. 3-attempt consecutive failure account lockout is safeguarding the authentication endpoint.
+                  </p>
+                </div>
+                <button type="button" class="btn-glass-sm btn-goto-security">Audit Hub</button>
+              </div>
+
+            </div>
+          </section>
+        </div>
+
+
+        <!-- ===================================================================
+             TAB 6: PROFILE & SECURITY OPERATIONS
+             =================================================================== -->
+        <div id="tabContentProfile" class="dashboard-page-view hidden">
+          <div class="profile-security-layout">
+            
+            <!-- User Profile Card -->
+            <div class="glass-panel-card profile-user-card">
+              <div class="profile-hero">
+                <div class="profile-avatar-big" id="profileBigAvatar">A</div>
+                <div class="profile-meta">
+                  <h3 class="profile-name" id="profileNameDisplay">Abhinandan</h3>
+                  <span class="profile-role">Corporate Legal Counsel & Administrator</span>
+                  <div class="profile-badges">
+                    <span class="tag-pill">Enterprise Tier</span>
+                    <span class="tag-pill">256-Bit TLS</span>
+                    <span class="tag-pill">RFC 7617 Protocol</span>
+                  </div>
+                </div>
+                <button type="button" id="btnProfileSignOut" class="btn-danger-glass">
+                  <iconify-icon icon="lucide:log-out" width="16" height="16"></iconify-icon>
+                  <span>Sign Out of ContractAI</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Diagnostics Strip -->
+            <div class="diagnostics-grid">
+              <div class="diag-card">
+                <span class="diag-label">SQLite Database Engine</span>
+                <strong class="diag-val">auth.db</strong>
+                <span class="diag-sub">Persistent Storage • users & contracts</span>
+              </div>
+              <div class="diag-card">
+                <span class="diag-label">Password Algorithm</span>
+                <strong class="diag-val">&sum; ASCII Ordinal</strong>
+                <span class="diag-sub">Deterministic custom verification</span>
+              </div>
+              <div class="diag-card">
+                <span class="diag-label">Lockout Defense</span>
+                <strong class="diag-val">3 Consecutive Attempts</strong>
+                <span class="diag-sub">Immediate account freeze on failure</span>
+              </div>
+              <div class="diag-card">
+                <span class="diag-label">Google Sheets Audit Sync</span>
+                <strong class="diag-val" id="diagSheetsVal">gspread Active</strong>
+                <span class="diag-sub" id="diagSheetsSub">Resilient fallback ready</span>
+              </div>
+            </div>
+
+            <!-- SQLite User Audit Table -->
+            <div class="glass-panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">SQLite Registered Identities & Audit Log</h3>
+                  <p class="panel-desc">Real-time user registry, lockout states, and administrative controls</p>
+                </div>
+                <button type="button" id="btnRefreshAudit" class="btn-glass-sm">
+                  <iconify-icon icon="lucide:refresh-cw" width="14" height="14"></iconify-icon>
+                  <span>Refresh Registry</span>
+                </button>
+              </div>
+
+              <div class="table-container">
+                <table class="glass-table">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Username</th>
+                      <th>Account Status</th>
+                      <th>Failed Attempts</th>
+                      <th>Registered Timestamp</th>
+                      <th class="text-right">Admin Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="auditTableBody">
+                    <!-- Populated dynamically via app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Security Tools (Simulator, RFC 7617, Benchmark) -->
+            <div class="security-tools-row">
+              
+              <!-- 1-Click Lockout Simulator -->
+              <div class="tool-glass-card">
+                <div class="tool-head">
+                  <iconify-icon icon="lucide:lock" width="20" height="20" class="text-orange"></iconify-icon>
+                  <strong>1-Click Lockout Simulator</strong>
+                </div>
+                <p class="tool-text">Simulate 3 consecutive failed logins to trigger an immediate account lockout.</p>
+                <div class="tool-input-row">
+                  <input type="text" id="lockoutSimUsername" class="glass-input" value="Abhi_hack" placeholder="Target username" />
+                  <button type="button" id="btnSimulateLockout" class="btn-danger-glass">
+                    <span>Lock User</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- RFC 7617 Native Basic Auth -->
+              <div class="tool-glass-card">
+                <div class="tool-head">
+                  <iconify-icon icon="lucide:server" width="20" height="20" class="text-violet"></iconify-icon>
+                  <strong>RFC 7617 HTTP Basic Auth</strong>
+                </div>
+                <p class="tool-text">Test real Authorization: Basic base64(u:p) headers against /api/native-auth.</p>
+                <button type="button" id="btnTestNativeAuth" class="btn-glass-sm">
+                  <iconify-icon icon="lucide:terminal" width="14" height="14"></iconify-icon>
+                  <span>Send RFC 7617 Request</span>
+                </button>
+                <div id="nativeAuthResultBox" class="terminal-box hidden"></div>
+              </div>
+
+              <!-- Latency Benchmark -->
+              <div class="tool-glass-card">
+                <div class="tool-head">
+                  <iconify-icon icon="lucide:gauge" width="20" height="20" class="text-cyan"></iconify-icon>
+                  <strong>Latency & Overhead Benchmark</strong>
+                </div>
+                <p class="tool-text">Measure database roundtrip latency and compare protocol header overhead.</p>
+                <div class="benchmark-val-box">
+                  <span>SQLite Ping Latency:</span>
+                  <strong id="benchPingValue" class="text-violet">-- ms</strong>
+                </div>
+                <button type="button" id="btnRunBenchmark" class="btn-glass-sm">
+                  <span>Measure Server Latency</span>
+                </button>
+                <div id="benchComparisonBox" class="benchmark-box hidden"></div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </section>
+
+  <!-- Application Controller -->
+  <script src="app.js"></script>
+</body>
+</html>
