@@ -19,6 +19,9 @@ __pycache__/
 .env
 .env.local
 .env.*.local
+backend/credentials.json
+backend/service_account.json
+backend/auth.db
 
 # Logs
 *.log
