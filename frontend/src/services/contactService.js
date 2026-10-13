@@ -1,4 +1,5 @@
 // Local Contact Intelligence & Rule-Based Analysis Engine for Students
+import api from './api';
 
 const DEMO_CONTACTS = [
   {
@@ -102,6 +103,7 @@ const DEMO_CONTACTS = [
 const STORAGE_KEY = 'contractai_student_contacts';
 
 export const contactService = {
+  // Synchronous getter for initial component render
   getContacts() {
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) {
@@ -115,29 +117,74 @@ export const contactService = {
     }
   },
 
+  // Asynchronous fetch from backend with cache update
+  async fetchContacts() {
+    try {
+      const res = await api.get('/contacts');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        this.saveContacts(res.data);
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[ContactService] Backend /api/contacts unavailable, using local cache:', err.message);
+    }
+    return this.getContacts();
+  },
+
   saveContacts(contacts) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
   },
 
-  addContact(contact) {
-    const contacts = this.getContacts();
-    const newContact = {
+  async addContact(contact) {
+    const formatted = {
       ...contact,
-      id: 'cnt_' + Date.now(),
-      lastInteraction: contact.lastInteraction || new Date().toISOString().split('T')[0],
-      priority: contact.priority || 'Medium',
       tags: Array.isArray(contact.tags)
         ? contact.tags
         : typeof contact.tags === 'string'
         ? contact.tags.split(',').map((t) => t.trim()).filter(Boolean)
         : [],
+      lastInteraction: contact.lastInteraction || new Date().toISOString().split('T')[0],
+      priority: contact.priority || 'Medium',
     };
+
+    try {
+      const res = await api.post('/contacts', formatted);
+      if (res.data) {
+        const current = this.getContacts();
+        const updated = [res.data, ...current.filter((c) => c.id !== res.data.id)];
+        this.saveContacts(updated);
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[ContactService] Backend add contact failed, saving locally:', err.message);
+    }
+
+    const newContact = {
+      ...formatted,
+      id: 'cnt_' + Date.now(),
+    };
+    const contacts = this.getContacts();
     contacts.unshift(newContact);
     this.saveContacts(contacts);
     return newContact;
   },
 
-  updateContact(id, updatedFields) {
+  async updateContact(id, updatedFields) {
+    try {
+      const res = await api.put(`/contacts/${id}`, updatedFields);
+      if (res.data) {
+        const contacts = this.getContacts();
+        const index = contacts.findIndex((c) => c.id === id);
+        if (index !== -1) {
+          contacts[index] = { ...contacts[index], ...res.data };
+          this.saveContacts(contacts);
+        }
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[ContactService] Backend update contact failed, updating locally:', err.message);
+    }
+
     const contacts = this.getContacts();
     const index = contacts.findIndex((c) => c.id === id);
     if (index !== -1) {
@@ -148,20 +195,44 @@ export const contactService = {
     return null;
   },
 
-  deleteContact(id) {
+  async deleteContact(id) {
+    try {
+      await api.delete(`/contacts/${id}`);
+    } catch (err) {
+      console.warn('[ContactService] Backend delete contact failed:', err.message);
+    }
     const contacts = this.getContacts();
     const filtered = contacts.filter((c) => c.id !== id);
     this.saveContacts(filtered);
     return filtered;
   },
 
-  resetToDemo() {
+  async resetToDemo() {
+    try {
+      const res = await api.post('/contacts/seed-demo');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        this.saveContacts(res.data);
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[ContactService] Backend seed-demo failed, resetting locally:', err.message);
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEMO_CONTACTS));
     return DEMO_CONTACTS;
   },
 
   // Parse CSV string into contact objects
-  importCsv(csvText) {
+  async importCsv(csvText) {
+    try {
+      const res = await api.post('/contacts/import-csv', { csv_text: csvText });
+      if (res.data) {
+        await this.fetchContacts();
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[ContactService] Backend CSV import failed, using local parser:', err.message);
+    }
+
     const lines = csvText.split(/\r?\n/).filter((line) => line.trim().length > 0);
     if (lines.length < 2) {
       throw new Error('CSV file is empty or does not contain header and data rows.');

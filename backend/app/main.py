@@ -6,14 +6,16 @@ from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
 from app.database.mongodb import connect_to_mongo, close_mongo_connection
-from app.routes import auth, contracts, analysis, reports
+from app.database.seed import seed_initial_data
+from app.routes import auth, contracts, analysis, reports, contacts
 
 load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Connect to MongoDB
+    # Startup: Connect to MongoDB and seed demo credentials/data
     await connect_to_mongo()
+    await seed_initial_data()
     yield
     # Shutdown: Close MongoDB connection
     await close_mongo_connection()
@@ -54,6 +56,7 @@ app.include_router(auth.router)
 app.include_router(contracts.router)
 app.include_router(analysis.router)
 app.include_router(reports.router)
+app.include_router(contacts.router)
 
 @app.get("/")
 async def root():

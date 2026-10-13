@@ -92,9 +92,17 @@ export default function Dashboard() {
     loadContacts();
   }, []);
 
-  const loadContacts = () => {
+  const loadContacts = async () => {
     const list = contactService.getContacts();
     setContacts(list);
+    try {
+      const refreshed = await contactService.fetchContacts();
+      if (Array.isArray(refreshed) && refreshed.length > 0) {
+        setContacts(refreshed);
+      }
+    } catch {
+      // keep current list
+    }
   };
 
   const setTab = (tabName) => {
@@ -136,19 +144,19 @@ export default function Dashboard() {
   }, [contacts, searchTerm, selectedCategory, statusFilter]);
 
   // Handle Form Submit (Add or Edit)
-  const handleSaveContact = (e) => {
+  const handleSaveContact = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) return;
 
     if (editingContact) {
-      contactService.updateContact(editingContact.id, formData);
+      await contactService.updateContact(editingContact.id, formData);
       setActionSuccess(`Updated ${formData.name}`);
     } else {
-      contactService.addContact(formData);
+      await contactService.addContact(formData);
       setActionSuccess(`Added new contact ${formData.name}`);
     }
 
-    loadContacts();
+    await loadContacts();
     setShowAddModal(false);
     setEditingContact(null);
     resetForm();
@@ -171,10 +179,10 @@ export default function Dashboard() {
     setShowAddModal(true);
   };
 
-  const handleDeleteClick = (id, name) => {
+  const handleDeleteClick = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      contactService.deleteContact(id);
-      loadContacts();
+      await contactService.deleteContact(id);
+      await loadContacts();
       setActionSuccess(`Deleted contact`);
       setTimeout(() => setActionSuccess(''), 3000);
     }
@@ -194,21 +202,21 @@ export default function Dashboard() {
     });
   };
 
-  const handleResetDemo = () => {
+  const handleResetDemo = async () => {
     if (window.confirm('Reset contacts list to the default demo student dataset?')) {
-      const demoList = contactService.resetToDemo();
+      const demoList = await contactService.resetToDemo();
       setContacts(demoList);
       setActionSuccess('Demo student contacts loaded successfully!');
       setTimeout(() => setActionSuccess(''), 3500);
     }
   };
 
-  const handleLoadDemoData = () => {
+  const handleLoadDemoData = async () => {
     if (window.confirm('Load 20 realistic student demo contacts across Teachers, College, Friends, Internship, Placement, Hackathon, and Professional categories?\n\nThis will also seed 2 sample contract analyses in your History.\n\nExisting contacts will be replaced.')) {
-      const demoContacts = offlineDemoService.loadDemoContacts();
+      const demoContacts = await contactService.resetToDemo();
       offlineDemoService.loadDemoAnalyses();
       setContacts(demoContacts);
-      setActionSuccess(`✓ Loaded ${demoContacts.length} demo student contacts across 7 categories + 2 sample contract analyses — all stored locally, no internet required!`);
+      setActionSuccess(`✓ Loaded ${demoContacts.length} demo student contacts across 7 categories + 2 sample contract analyses!`);
       setTimeout(() => setActionSuccess(''), 6000);
     }
   };
@@ -226,15 +234,15 @@ export default function Dashboard() {
     document.body.removeChild(link);
   };
 
-  const handleCsvImport = () => {
+  const handleCsvImport = async () => {
     setCsvError('');
     if (!csvContent.trim()) {
       setCsvError('Please paste CSV contents or upload a .csv file.');
       return;
     }
     try {
-      const res = contactService.importCsv(csvContent);
-      loadContacts();
+      const res = await contactService.importCsv(csvContent);
+      await loadContacts();
       setShowCsvModal(false);
       setCsvContent('');
       setActionSuccess(`Successfully imported ${res.addedCount} contacts!`);
